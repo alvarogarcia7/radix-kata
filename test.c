@@ -14,6 +14,8 @@ trie_t* new(){
 	return ret;
 }
 
+void insert(trie_t *trie, char *new);
+
 
 bool test_1_trie_with_0_children() {
 	trie_t *t = new();
@@ -24,8 +26,23 @@ bool test_1_trie_with_0_children() {
 	return true;
 }
 
+bool test_2_empty_trie_with_1_child_hence_1_level() {
+	trie_t *t = new();
+
+	insert(t, "animal");
+
+	assert (t->size == 0);
+	assert (t->children == NULL);
+	assert (strcmp(t->word, "animal") == 0);
+	assert (t->is_final == true);
+
+	return true;
+}
+
+
 int main(int argc, char **argv) {
 	assert (test_1_trie_with_0_children() == true);
+	assert (test_2_empty_trie_with_1_child() == true);
 	return 0;
 }
 
@@ -33,14 +50,21 @@ int main(int argc, char **argv) {
 void insert(trie_t *trie, char *new) {
 	int common = -1;
 	trie_t *t = trie;
-	for (int i = 0; i < strlen(t->word); i++){
-		if (t->word[i] == new[i]){
-			common = i;
-			continue;
+	if (NULL != t->word) {
+		for (int i = 0; i < strlen(t->word); i++){
+			if (t->word[i] == new[i]){
+				common = i;
+				continue;
+			}
+			else {
+				break;
+			}
 		}
-		else {
-			break;
-		}
+	} else {
+		t->word = malloc(strlen(new) + 1);
+		strcpy(t->word, new);
+		t->is_final = true;
+		return;
 	}
 
 	int insert_at = -2;
@@ -62,7 +86,7 @@ void insert(trie_t *trie, char *new) {
 		insert_at = t->size;
 	}
 
-	trie_t *c2 = realloc(t->children, 100);
+	// trie_t *c2 = realloc(t->children, 100);
 }
 
 
