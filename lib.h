@@ -1,4 +1,5 @@
 #include <stdbool.h>
+
 typedef struct trie_t {
 	int size;
 	struct trie_t *children;

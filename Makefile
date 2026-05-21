@@ -6,5 +6,5 @@ t: test
 # main: main.c
 # 	gcc lib.c -o main
 
-test: test.c lib.c
-	gcc -g test.c lib.c -o test
+test: test.c 
+	gcc -g test.c -o test
