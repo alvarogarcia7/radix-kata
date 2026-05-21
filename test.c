@@ -15,7 +15,7 @@ trie_t* new(){
 }
 
 
-bool test_1() {
+bool test_1_trie_with_0_children() {
 	trie_t *t = new();
 	assert (t->size == 0);
 	assert (t->children == NULL);
@@ -25,7 +25,7 @@ bool test_1() {
 }
 
 int main(int argc, char **argv) {
-	assert (test_1() == true);
+	assert (test_1_trie_with_0_children() == true);
 	return 0;
 }
 
