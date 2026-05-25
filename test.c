@@ -43,9 +43,7 @@ bool test_3_2_children_in_2_levels() {
 	trie_t *t = new();
 
 	insert(&t, "animal");
-	// debug_print(t);
 	insert(&t, "animalada");
-	// insert(&t, "barba");
 
 	assert (t->size == 1);
 	assert (t->is_final == true);
