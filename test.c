@@ -14,7 +14,7 @@ trie_t* new(){
 	return ret;
 }
 
-void insert(trie_t *trie, char *new);
+void insert(trie_t **trie, char *new);
 
 
 bool test_1_trie_with_0_children() {
@@ -29,7 +29,7 @@ bool test_1_trie_with_0_children() {
 bool test_2_empty_trie_with_1_child_hence_1_level() {
 	trie_t *t = new();
 
-	insert(t, "animal");
+	insert(&t, "animal");
 
 	assert (t->size == 0);
 	assert (t->children == NULL);
@@ -39,20 +39,79 @@ bool test_2_empty_trie_with_1_child_hence_1_level() {
 	return true;
 }
 
+bool test_3_2_children_in_2_levels() {
+	trie_t *t = new();
 
-int main(int argc, char **argv) {
-	assert (test_1_trie_with_0_children() == true);
-	assert (test_2_empty_trie_with_1_child() == true);
-	return 0;
+	insert(&t, "animal");
+	// debug_print(t);
+	insert(&t, "animalada");
+	// insert(&t, "barba");
+
+	assert (t->size == 1);
+	assert (t->is_final == true);
+	assert (strcmp(t->word, "animal") == 0);
+
+	assert (t->children[0]->is_final == true);
+	assert (t->children[0]->size == 0);
+	assert (strcmp(t->children[0]->word, "ada") == 0);
+
+	return true;
 }
 
 
-void insert(trie_t *trie, char *new) {
+int main(int argc, char **argv) {
+	assert (test_1_trie_with_0_children() == true);
+	assert (test_2_empty_trie_with_1_child_hence_1_level() == true);
+	assert (test_3_2_children_in_2_levels() == true);
+	return 0;
+}
+
+void add_child(trie_t *trie, char *new_string) {
+	// printf("add_child(trie, %s).\n", new_string);
+	// debug_print(trie);
+	trie_t **c2 = realloc(trie->children, 100  + sizeof(trie_t*) * (trie->size + 1));
+	int insert_before = 0;
+	for (int i = 0; i < trie->size; i++) {
+		trie_t *c = trie->children[i];
+		if (c->word[0] <= new_string[0]) {
+			continue;
+		} else {
+			insert_before = i;
+		}
+	}
+	// printf("add_child. insert_before = %d\n", insert_before);
+	for (int i = 0; i < insert_before; i++) {
+		memcpy(&c2[i], &trie->children[i], sizeof(trie_t*));
+	}
+
+	trie_t *cc2 = new();
+	cc2->children = NULL;
+	cc2->word = malloc(strlen(new_string) + 1);
+	strcpy(cc2->word, new_string);
+	cc2->is_final = true;
+	c2[insert_before] = cc2;
+	// printf("add_child, after inserting the new element:\n");
+	// debug_print(trie);
+	// debug_print(cc2);
+
+	for (int i = insert_before; i < trie->size; i++) {
+		memcpy(&c2[i], &trie->children[i-1], sizeof(trie_t*));
+	}
+	free(trie->children);
+	
+	trie->children=c2;
+	trie->size++;
+}
+
+
+
+void insert(trie_t **trie, char *new_string) {
 	int common = -1;
-	trie_t *t = trie;
+	trie_t *t = *trie;
 	if (NULL != t->word) {
-		for (int i = 0; i < strlen(t->word); i++){
-			if (t->word[i] == new[i]){
+		// there might be a common prefix
+		for (int i = 0; i < strlen(t->word) && i < strlen(new_string); i++){
+			if (t->word[i] == new_string[i]){
 				common = i;
 				continue;
 			}
@@ -60,21 +119,39 @@ void insert(trie_t *trie, char *new) {
 				break;
 			}
 		}
+		// printf("Found common? %s\n", common != -1? "true" : "false");
+		// if (common != -1) {
+		// 	printf("Common prefix: %.*s (len=%d) \n", common+1, t->word, common ); 
+		// }
+
+		add_child(*trie, &new_string[common+1]);
 	} else {
-		t->word = malloc(strlen(new) + 1);
-		strcpy(t->word, new);
-		t->is_final = true;
-		return;
+		if (t->is_final) {
+			// example: have "animal", insert "jungle": resulting: "" -> ["animal", "jungle"]
+			// need to check if need another child
+			trie_t *parent = new();
+			parent->size = t->size+1;
+			trie_t *c2 = realloc(t->children, sizeof(trie_t) * parent->size);
+
+			c2[t->size] = *t;
+
+			*trie = parent;
+		} else {
+			t->word = malloc(strlen(new_string) + 1);
+			strcpy(t->word, new_string);
+			t->is_final = true;
+			return;
+		}
 	}
 
 	int insert_at = -2;
 
 	for (int cc = 0; cc < t->size; cc++) {
-		char *c = t->children[cc].word;
+		char *c = t->children[cc]->word;
 		for (int k = 0; k < strlen(c); k++) {
-			if (new[common] == c[k]) {
-				insert(&t->children[cc], &new[k]);
-			} else if (new[common] > c[k]) {
+			if (new_string[common] == c[k]) {
+				insert((&t->children[cc]), &new_string[k]);
+			} else if (new_string[common] > c[k]) {
 				insert_at = k-1;
 			} else {
 				continue;
