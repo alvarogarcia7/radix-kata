@@ -10,6 +10,7 @@ Learning goals for this kata:
 2. Implement a data structure using TDD
 3. Practice recursion
 4. C-Specific goals: manual memory management, strings
+5. Learn/discover/practice jujutsu (in a docker container)
 
 ## Implementation notes
 
