@@ -9,4 +9,8 @@ RUN curl -o /tmp/jj.tar.gz https://release-assets.githubusercontent.com/github-p
 && tar -xzf /tmp/jj.tar.gz \
 && mv /tmp/jj /bin/
 
+RUN \
+   jj config set --user user.name "Alvaro Garcia" \
+&& jj config set --user user.email "alvarogarcia7@noreply.users.github.com"
+
 
