@@ -56,6 +56,35 @@ bool test_3_2_children_in_2_levels() {
 	return true;
 }
 
+void assert_trie_node(trie_t *node, int expected_size, char *expected_word, bool expected_is_final){
+	assert (node != NULL);
+	assert (node->size == expected_size);
+	assert (strcmp(node->word, expected_word) == 0);
+	assert (node->is_final == expected_is_final);
+}
+
+bool test_4_3_children_in_3_levels() {
+	trie_t *t = new();
+
+	insert(&t, "animal");
+	insert(&t, "animalada");
+	insert(&t, "animaladas");
+
+	trie_t *node=t;
+
+	assert_trie_node(t, 1, "animal", true);
+
+	assert (t->size == 1);
+	assert (t->is_final == true);
+	assert (strcmp(t->word, "animal") == 0);
+
+	assert (t->children[0]->is_final == true);
+	assert (t->children[0]->size == 0);
+	assert (strcmp(t->children[0]->word, "ada") == 0);
+
+	return true;
+}
+
 
 int main(int argc, char **argv) {
 	assert (test_1_trie_with_0_children() == true);
