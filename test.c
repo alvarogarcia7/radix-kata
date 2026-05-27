@@ -73,14 +73,8 @@ bool test_4_3_children_in_3_levels() {
 	trie_t *node=t;
 
 	assert_trie_node(t, 1, "animal", true);
-
-	assert (t->size == 1);
-	assert (t->is_final == true);
-	assert (strcmp(t->word, "animal") == 0);
-
-	assert (t->children[0]->is_final == true);
-	assert (t->children[0]->size == 0);
-	assert (strcmp(t->children[0]->word, "ada") == 0);
+	assert_trie_node(t->children[0], 1, "ada", true);
+	assert_trie_node(t->children[0]->children[0], 1, "ada", true);
 
 	return true;
 }
