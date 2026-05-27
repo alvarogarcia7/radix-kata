@@ -54,14 +54,6 @@ bool test_3_2_children_in_2_levels() {
 	assert_trie_node(t, 1, "animal", true);
 	assert_trie_node(t->children[0], 0, "ada", true);
 
-	assert (t->size == 1);
-	assert (t->is_final == true);
-	assert (strcmp(t->word, "animal") == 0);
-
-	assert (t->children[0]->is_final == true);
-	assert (t->children[0]->size == 0);
-	assert (strcmp(t->children[0]->word, "ada") == 0);
-
 	return true;
 }
 
