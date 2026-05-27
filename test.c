@@ -4,6 +4,12 @@
 #include <stdbool.h>
 #include "lib.h"
 
+void assert_trie_node(trie_t *node, int expected_size, char *expected_word, bool expected_is_final){
+	assert (node != NULL);
+	assert (node->size == expected_size);
+	assert (strcmp(node->word, expected_word) == 0);
+	assert (node->is_final == expected_is_final);
+}
 
 trie_t* new(){
 	trie_t *ret = malloc(sizeof(trie_t));
@@ -45,6 +51,9 @@ bool test_3_2_children_in_2_levels() {
 	insert(&t, "animal");
 	insert(&t, "animalada");
 
+	assert_trie_node(t, 1, "animal", true);
+	assert_trie_node(t->children[0], 0, "ada", true);
+
 	assert (t->size == 1);
 	assert (t->is_final == true);
 	assert (strcmp(t->word, "animal") == 0);
@@ -56,12 +65,6 @@ bool test_3_2_children_in_2_levels() {
 	return true;
 }
 
-void assert_trie_node(trie_t *node, int expected_size, char *expected_word, bool expected_is_final){
-	assert (node != NULL);
-	assert (node->size == expected_size);
-	assert (strcmp(node->word, expected_word) == 0);
-	assert (node->is_final == expected_is_final);
-}
 
 bool test_4_3_children_in_3_levels() {
 	trie_t *t = new();
@@ -69,8 +72,6 @@ bool test_4_3_children_in_3_levels() {
 	insert(&t, "animal");
 	insert(&t, "animalada");
 	insert(&t, "animaladas");
-
-	trie_t *node=t;
 
 	assert_trie_node(t, 1, "animal", true);
 	assert_trie_node(t->children[0], 1, "ada", true);
