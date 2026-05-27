@@ -37,10 +37,7 @@ bool test_2_empty_trie_with_1_child_hence_1_level() {
 
 	insert(&t, "animal");
 
-	assert (t->size == 0);
-	assert (t->children == NULL);
-	assert (strcmp(t->word, "animal") == 0);
-	assert (t->is_final == true);
+	assert_trie_node(t, 0, "animal", true);
 
 	return true;
 }
