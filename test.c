@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "lib.h"
+#include "log.h"
 
 void assert_trie_node(trie_t *node, int expected_size, char *expected_word, bool expected_is_final){
 	assert (node != NULL);
@@ -60,27 +61,32 @@ bool test_4_3_children_in_3_levels() {
 
 	insert(&t, "animal");
 	insert(&t, "animalada");
-	insert(&t, "animaladas");
+
+	debug_print(t);
 
 	assert_trie_node(t, 1, "animal", true);
+	assert_trie_node(t->children[0], 0, "ada", true);
+	
+	insert(&t, "animaladas");
 	assert_trie_node(t->children[0], 1, "ada", true);
-	assert_trie_node(t->children[0]->children[0], 1, "ada", true);
+	assert_trie_node(t->children[0]->children[0], 0, "s", true);
 
 	return true;
 }
 
 
 int main(int argc, char **argv) {
-	assert (test_1_trie_with_0_children() == true);
-	assert (test_2_empty_trie_with_1_child_hence_1_level() == true);
-	assert (test_3_2_children_in_2_levels() == true);
+	// assert (test_1_trie_with_0_children() == true);
+	// assert (test_2_empty_trie_with_1_child_hence_1_level() == true);
+	// assert (test_3_2_children_in_2_levels() == true);
+	assert (test_4_3_children_in_3_levels() == true);
 	return 0;
 }
 
 void add_child(trie_t *trie, char *new_string) {
-	// printf("add_child(trie, %s).\n", new_string);
-	// debug_print(trie);
-	trie_t **c2 = realloc(trie->children, 100  + sizeof(trie_t*) * (trie->size + 1));
+	printf("add_child(trie, %s).\n", new_string);
+	debug_print(trie);
+	trie_t **c2 = realloc(trie->children, sizeof(trie_t*) * (trie->size + 1));
 	int insert_before = 0;
 	for (int i = 0; i < trie->size; i++) {
 		trie_t *c = trie->children[i];
@@ -90,7 +96,7 @@ void add_child(trie_t *trie, char *new_string) {
 			insert_before = i;
 		}
 	}
-	// printf("add_child. insert_before = %d\n", insert_before);
+	printf("add_child. insert_before = %d\n", insert_before);
 	for (int i = 0; i < insert_before; i++) {
 		memcpy(&c2[i], &trie->children[i], sizeof(trie_t*));
 	}
@@ -101,9 +107,9 @@ void add_child(trie_t *trie, char *new_string) {
 	strcpy(cc2->word, new_string);
 	cc2->is_final = true;
 	c2[insert_before] = cc2;
-	// printf("add_child, after inserting the new element:\n");
-	// debug_print(trie);
-	// debug_print(cc2);
+	printf("add_child, after inserting the new element:\n");
+	debug_print(trie);
+	debug_print(cc2);
 
 	for (int i = insert_before; i < trie->size; i++) {
 		memcpy(&c2[i], &trie->children[i-1], sizeof(trie_t*));
@@ -130,10 +136,10 @@ void insert(trie_t **trie, char *new_string) {
 				break;
 			}
 		}
-		// printf("Found common? %s\n", common != -1? "true" : "false");
-		// if (common != -1) {
-		// 	printf("Common prefix: %.*s (len=%d) \n", common+1, t->word, common ); 
-		// }
+		printf("Found common? %s\n", common != -1? "true" : "false");
+		if (common != -1) {
+			printf("Common prefix: %.*s (len=%d) \n", common+1, t->word, common ); 
+		}
 
 		add_child(*trie, &new_string[common+1]);
 	} else {

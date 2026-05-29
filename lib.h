@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include "log.h"
 
 typedef struct trie_t {
 	int size; // how many direct children this node has
@@ -9,7 +10,7 @@ typedef struct trie_t {
 } trie_t;
 
 void debug_print_indented(trie_t *trie, int indentation_level) {
-	printf("%.*s[%s] %s, %d children:\n", indentation_level, "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t", trie->is_final? "F" : " ", trie->word, trie->size);
+	log_debug("%.*s[%s] %s, %d children", indentation_level, "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t", trie->is_final? "F" : " ", trie->word, trie->size);
 	for (int i = 0; i < trie->size; i++) {
 		debug_print_indented(trie->children[i], indentation_level + 1);
 	}
