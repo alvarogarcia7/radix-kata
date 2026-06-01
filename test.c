@@ -62,7 +62,7 @@ bool test_4_3_children_in_3_levels() {
 	insert(&t, "animal");
 	insert(&t, "animalada");
 
-	debug_print(t);
+	// debug_print(t);
 
 	assert_trie_node(t, 1, "animal", true);
 	assert_trie_node(t->children[0], 0, "ada", true);
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
 }
 
 void add_child(trie_t *trie, char *new_string) {
-	printf("add_child(trie, %s).\n", new_string);
+	log_debug("add_child(trie, %s).", new_string);
 	debug_print(trie);
 	trie_t **c2 = realloc(trie->children, sizeof(trie_t*) * (trie->size + 1));
 	int insert_before = 0;
@@ -96,7 +96,7 @@ void add_child(trie_t *trie, char *new_string) {
 			insert_before = i;
 		}
 	}
-	printf("add_child. insert_before = %d\n", insert_before);
+	log_debug("add_child. insert_before = %d", insert_before);
 	for (int i = 0; i < insert_before; i++) {
 		memcpy(&c2[i], &trie->children[i], sizeof(trie_t*));
 	}
@@ -107,9 +107,9 @@ void add_child(trie_t *trie, char *new_string) {
 	strcpy(cc2->word, new_string);
 	cc2->is_final = true;
 	c2[insert_before] = cc2;
-	printf("add_child, after inserting the new element:\n");
-	debug_print(trie);
-	debug_print(cc2);
+	// log_debug("add_child, after inserting the new element:");
+	// debug_print(trie);
+	// debug_print(cc2);
 
 	for (int i = insert_before; i < trie->size; i++) {
 		memcpy(&c2[i], &trie->children[i-1], sizeof(trie_t*));
@@ -136,12 +136,17 @@ void insert(trie_t **trie, char *new_string) {
 				break;
 			}
 		}
-		printf("Found common? %s\n", common != -1? "true" : "false");
+		log_debug("Found common? %s (common = %d)", common != -1? "true" : "false", common);
 		if (common != -1) {
-			printf("Common prefix: %.*s (len=%d) \n", common+1, t->word, common ); 
+			log_debug("Common prefix: %.*s (len=%d)", common+1, t->word, common ); 
 		}
 
-		add_child(*trie, &new_string[common+1]);
+		if(common != -1 && t->size > 0) {
+			insert(&t->children[0], &new_string[common+1]);
+		} else {
+			add_child(*trie, &new_string[common+1]);
+		}
+
 	} else {
 		if (t->is_final) {
 			// example: have "animal", insert "jungle": resulting: "" -> ["animal", "jungle"]
