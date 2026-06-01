@@ -56,13 +56,11 @@ bool test_3_2_children_in_2_levels() {
 }
 
 
-bool test_4_3_children_in_3_levels() {
+bool test_4_children_that_extend_the_parent_exactly() {
 	trie_t *t = new();
 
 	insert(&t, "animal");
 	insert(&t, "animalada");
-
-	// debug_print(t);
 
 	assert_trie_node(t, 1, "animal", true);
 	assert_trie_node(t->children[0], 0, "ada", true);
@@ -70,6 +68,9 @@ bool test_4_3_children_in_3_levels() {
 	insert(&t, "animaladas");
 	assert_trie_node(t->children[0], 1, "ada", true);
 	assert_trie_node(t->children[0]->children[0], 0, "s", true);
+	
+	insert(&t, "animaladasa");
+	assert_trie_node(t->children[0]->children[0]->children[0], 0, "a", true);
 
 	return true;
 }
@@ -79,7 +80,7 @@ int main(int argc, char **argv) {
 	assert (test_1_trie_with_0_children() == true);
 	assert (test_2_empty_trie_with_1_child_hence_1_level() == true);
 	assert (test_3_2_children_in_2_levels() == true);
-	assert (test_4_3_children_in_3_levels() == true);
+	assert (test_4_children_that_extend_the_parent_exactly() == true);
 	return 0;
 }
 
