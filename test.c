@@ -76,9 +76,9 @@ bool test_4_3_children_in_3_levels() {
 
 
 int main(int argc, char **argv) {
-	// assert (test_1_trie_with_0_children() == true);
-	// assert (test_2_empty_trie_with_1_child_hence_1_level() == true);
-	// assert (test_3_2_children_in_2_levels() == true);
+	assert (test_1_trie_with_0_children() == true);
+	assert (test_2_empty_trie_with_1_child_hence_1_level() == true);
+	assert (test_3_2_children_in_2_levels() == true);
 	assert (test_4_3_children_in_3_levels() == true);
 	return 0;
 }
