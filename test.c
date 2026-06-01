@@ -52,10 +52,26 @@ bool test_2_children_that_extend_the_parent_exactly() {
 	return true;
 }
 
+bool test_3_several_children_from_the_same_parent() {
+	trie_t *t = new();
+
+	insert(&t, "animal");
+	insert(&t, "animalada");
+
+	assert_trie_node(t, 1, "animal", true);
+	assert_trie_node(t->children[0], 0, "ada", true);
+	
+	insert(&t, "animales");
+	// assert_trie_node(t, 2, "animal", true);
+	assert_trie_node(t->children[1], 0, "es", true);
+	
+	return true;
+}
 
 int main(int argc, char **argv) {
 	assert (test_1_trie_with_0_children() == true);
 	assert (test_2_children_that_extend_the_parent_exactly() == true);
+	assert (test_3_several_children_from_the_same_parent() == true);
 	return 0;
 }
 
