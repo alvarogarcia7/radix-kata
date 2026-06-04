@@ -86,14 +86,10 @@ class TestRadix:
 
 
     def test_insert_a_child_node_that_matches_partially(self):
-        radix = Radix()
-        radix.insert("abcd")
-        radix.insert("a")
-        radix.insert("ab")
-
-        assert FinalNode("a", True, 1) == radix._root
-        assert FinalNode("b", True, 1) == radix._root.children[0]
-        assert FinalNode('cd', True, 0) == radix._root.children[0].children[0]
+        for radix in self.permute_insert(["abcd", "a", "ab"]):
+            assert FinalNode("a", True, 1) == radix._root
+            assert FinalNode("b", True, 1) == radix._root.children[0]
+            assert FinalNode('cd', True, 0) == radix._root.children[0].children[0]
 
     def test_insert_two_nodes_sharing_a_non_final_word(self):
         for radix in self.permute_insert(["ac", "ab"]):
