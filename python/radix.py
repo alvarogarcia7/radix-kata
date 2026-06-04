@@ -30,19 +30,35 @@ class Node:
     def insert(self, new: str):
         self.insert_child_or_sibling(new)
 
-    def insert_child_or_sibling(self, new: str):
-        if new.startswith(self.word):
+    def insert_child_or_sibling(self, new: str) -> Node:
+        if self.word.startswith(new):
+            new_root = Node(new, True)
+            previous_root = self
+            previous_root.word = previous_root.word[len(new):]
+            new_root.children.append(previous_root)
+            return new_root
+        elif new.startswith(self.word):
             rest_of_word = new.split(self.word, 1)[1]
             inserted = False
             for child in self.children:
                 shared_prefix_for_child = os.path.commonprefix([rest_of_word, child.word])
                 if shared_prefix_for_child != '':
-                    child.insert(rest_of_word)
-                    inserted = True
+                    child_contains_more_than_shared_prefix = len(child.word) > len(shared_prefix_for_child)
+                    if child_contains_more_than_shared_prefix:
+                        intermediate_node = Node(shared_prefix_for_child, child.is_final, [child])
+                        child.word = child.word[len(shared_prefix_for_child):]
+                        self.children.append(intermediate_node)
+                        self.children.remove(child)
+                        inserted = True
+                    else:
+                        child.insert(rest_of_word)
+                        inserted = True
             if not inserted:
                 self.children.append(Node(rest_of_word, True))
+            return self
         else:
             self.children.append(Node(new, True))
+            return self
 
 
 @dataclass
@@ -75,7 +91,7 @@ class Radix:
             new_root.children.append(previous_root)
             self._root = new_root
         elif new.startswith(self._root.word) :
-            self._root.insert_child_or_sibling(new)
+            self._root = self._root.insert_child_or_sibling(new)
         else:
             new_root = Node("", False)
             new_root.children.append(self._root)

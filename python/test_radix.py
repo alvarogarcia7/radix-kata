@@ -1,3 +1,5 @@
+import pprint
+
 from radix import Node, Radix, FinalNode
 
 class TestRadix:
@@ -65,9 +67,30 @@ class TestRadix:
 
     def test_insert_a_parent_node_that_matches_completely(self):
         radix = Radix()
-        radix.insert("ab")
+        radix.insert("abc")
         radix.insert("a")
 
         assert FinalNode("a", True, 1) == radix._root
-        assert FinalNode('b', True, 0) == radix._root.children[0]
+        assert FinalNode('bc', True, 0) == radix._root.children[0]
 
+
+    def test_insert_a_parent_node_that_matches_completely_with_multiple_letters(self):
+        radix = Radix()
+        radix.insert("abcd")
+        radix.insert("ab")
+
+        assert FinalNode("ab", True, 1) == radix._root
+        assert FinalNode('cd', True, 0) == radix._root.children[0]
+
+
+    def test_insert_a_child_node_that_matches_partially(self):
+        radix = Radix()
+        radix.insert("abcd")
+        radix.insert("a")
+        radix.insert("ab")
+
+        pprint.pprint(radix)
+
+        assert FinalNode("a", True, 1) == radix._root
+        assert FinalNode("b", True, 1) == radix._root.children[0]
+        assert FinalNode('cd', True, 0) == radix._root.children[0].children[0]
