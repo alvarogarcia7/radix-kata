@@ -34,3 +34,13 @@ class TestRadix:
 
         assert FinalNode("a") == radix._root.children[0]
         assert FinalNode('b') == radix._root.children[1]
+    
+    def test_insert_niece_nodes(self):
+        radix = Radix()
+        radix.insert("a")
+        radix.insert("abc")
+        radix.insert("ad")
+
+        assert FinalNode("a") == radix._root
+        assert FinalNode('bc') == radix._root.children[0]
+        assert FinalNode('d') == radix._root.children[1]
