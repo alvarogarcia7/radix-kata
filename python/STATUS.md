@@ -1,6 +1,5 @@
-# 2026-06-04 T 23:24
+# 2026-06-04 T 23:24 - DONE
 
-## Wrong assert 
 - [x] There is a wrong assert (marked with a todo). Solve that.
 
 it is inserting:
@@ -15,9 +14,7 @@ when it should be
     [F] bc
     [F] d
 
-## Implement pprint better
-
-- [x] show the depth (as in my example above) when printing the tree
+- [x] Implement pprint better - show the depth (as in my example above) when printing the tree
 
 # 2026-06-05 T 03:52
 
