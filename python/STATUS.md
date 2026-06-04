@@ -1,7 +1,7 @@
 # 2026-06-04 T 23:24
 
 ## Wrong assert 
-There is a wrong assert (marked with a todo). Solve that.
+- [x] There is a wrong assert (marked with a todo). Solve that.
 
 it is inserting:
 

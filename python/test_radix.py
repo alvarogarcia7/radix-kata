@@ -46,11 +46,7 @@ class TestRadix:
 
         assert FinalNode("a") == radix._root
         assert FinalNode('bc') == radix._root.children[0]
-
-        # TODO AGB: this assert is wrong. Should be children[1]
-        # assert FinalNode('d') == radix._root.children[1]
-        assert FinalNode('d') == radix._root.children[0].children[0]
-        # END TODO wrong assert
+        assert FinalNode('d') == radix._root.children[1]
 
         # assert len(radix._root.children) == 2
     

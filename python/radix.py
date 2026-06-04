@@ -1,6 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-        
+from typing import Any
+
+
 @dataclass
 class Node:
     word: str
@@ -22,12 +24,12 @@ class Node:
             rest_of_word = new.split(self.word, 1)[1]
             import os
 
-            children_words = []
             for child in self.children:
+                children_words = []
                 children_words.append(rest_of_word)
                 children_words.append(child.word)
                 result = os.path.commonprefix(children_words)
-                if result != []:
+                if result != '':
                     print(f"case insert {new} - result != []")
                     # has a common prefix with one of the children
                     child.insert(rest_of_word)
@@ -65,13 +67,13 @@ class Radix:
             print(rest_of_word)
             import os
 
-            children_words = []
             for child in self._root.children:
+                children_words = []
                 children_words.append(rest_of_word)
                 children_words.append(child.word)
                 result = os.path.commonprefix(children_words)
                 print(result)
-                if result != []:
+                if result != '':
                     # has a common prefix with one of the children
                     child.insert(rest_of_word)
                     return
