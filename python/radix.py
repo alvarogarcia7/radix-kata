@@ -49,9 +49,10 @@ class Node:
 class FinalNode:
     word: str
     is_final: bool = field(default_factory=lambda: True)
+    children_size: int = field(default_factory=lambda: 0)
 
     def __eq__(self, o: Any):
-        return self.word == o.word and self.is_final == o.is_final
+        return self.word == o.word and self.is_final == o.is_final and self.children_size == len(o.children)
 
 class Radix:
     _root: Node | None

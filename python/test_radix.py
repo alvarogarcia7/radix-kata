@@ -17,23 +17,27 @@ class TestRadix:
         radix = Radix()
         radix.insert("a")
 
-        assert radix._root == Node("a", True)
+        assert FinalNode("a", True, 0) == radix._root
     
     def test_insert_children_nodes(self):
         radix = Radix()
         radix.insert("a")
         radix.insert("abc")
 
-        assert FinalNode("a") == radix._root
-        assert FinalNode('bc') == radix._root.children[0]
+        assert FinalNode("a", True, 1) == radix._root
+        assert FinalNode('bc', True, 0) == radix._root.children[0]
     
     def test_insert_sibling_nodes(self):
         radix = Radix()
         radix.insert("a")
         radix.insert("b")
 
-        assert FinalNode("a") == radix._root.children[0]
-        assert FinalNode('b') == radix._root.children[1]
+        import pprint
+        pprint.pprint(radix)
+
+        assert FinalNode("", False, 2) == radix._root
+        assert FinalNode("a", True, 0) == radix._root.children[0]
+        assert FinalNode('b', True, 0) == radix._root.children[1]
     
     def test_insert_niece_nodes(self):
         radix = Radix()
@@ -44,9 +48,9 @@ class TestRadix:
         import pprint
         pprint.pprint(radix)
 
-        assert FinalNode("a") == radix._root
-        assert FinalNode('bc') == radix._root.children[0]
-        assert FinalNode('d') == radix._root.children[1]
+        assert FinalNode("a", True, 2) == radix._root
+        assert FinalNode('bc', True, 0) == radix._root.children[0]
+        assert FinalNode('d', True, 0) == radix._root.children[1]
 
         # assert len(radix._root.children) == 2
     
@@ -57,11 +61,8 @@ class TestRadix:
         radix.insert("abc")
         radix.insert("abcd")
 
-        assert FinalNode("a") == radix._root
-        assert FinalNode('b') == radix._root.children[0]
-        assert len(radix._root.children) == 1
-        assert FinalNode('c') == radix._root.children[0].children[0]
-        assert len(radix._root.children[0].children) == 1
-        assert FinalNode('d') == radix._root.children[0].children[0].children[0]
-        assert len(radix._root.children[0].children[0].children) == 1
+        assert FinalNode("a", True, 1) == radix._root
+        assert FinalNode('b', True, 1) == radix._root.children[0]
+        assert FinalNode('c', True, 1) == radix._root.children[0].children[0]
+        assert FinalNode('d', True, 0) == radix._root.children[0].children[0].children[0]
 
