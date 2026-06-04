@@ -51,14 +51,14 @@ class TestRadix:
         assert FinalNode('bc', True, 0) == radix._root.children[0]
         assert FinalNode('d', True, 0) == radix._root.children[1]
 
-        # assert len(radix._root.children) == 2
-    
     def test_insert_grandchildren_nodes(self):
         radix = Radix()
         radix.insert("a")
         radix.insert("ab")
         radix.insert("abc")
         radix.insert("abcd")
+
+        pprint.pprint(radix)
 
         assert FinalNode("a", True, 1) == radix._root
         assert FinalNode('b', True, 1) == radix._root.children[0]
@@ -89,8 +89,15 @@ class TestRadix:
         radix.insert("a")
         radix.insert("ab")
 
-        pprint.pprint(radix)
-
         assert FinalNode("a", True, 1) == radix._root
         assert FinalNode("b", True, 1) == radix._root.children[0]
         assert FinalNode('cd', True, 0) == radix._root.children[0].children[0]
+
+    def test_insert_two_nodes_sharing_a_non_final_word(self):
+        radix = Radix()
+        radix.insert("ac")
+        radix.insert("ab")
+
+        assert FinalNode("a", False, 2) == radix._root
+        assert FinalNode("b", True, 0) == radix._root.children[0]
+        assert FinalNode("c", True, 0) == radix._root.children[1]

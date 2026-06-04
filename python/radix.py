@@ -22,8 +22,8 @@ class Node:
         if len(self.children) == 0:
             return repr_for_parent
         else:
-            repr_for_parent += "\n"
-        else_ = (f"{len(self.children)} children:\n" + "".join(
+            repr_for_parent += " - "
+        else_ = (f"{len(self.children)} children:\n" + "\n".join(
             [c.__repr__(depth + 1) for c in self.children]) if self.children else "")
         return repr_for_parent + else_
 
@@ -70,6 +70,10 @@ class FinalNode:
     def __eq__(self, o: Any):
         return self.word == o.word and self.is_final == o.is_final and self.children_size == len(o.children)
 
+    def __repr__(self, depth=0):
+        is_f = "F" if self.is_final else " "
+        return f"{'\t' * depth}[{is_f}] {self.word} {self.children_size} children"
+
 class Radix:
     _root: Node | None
 
@@ -77,7 +81,7 @@ class Radix:
         self._root = None
 
     def __repr__(self):
-        return self._root.__repr__()
+        return "\n" + self._root.__repr__()
 
     def insert(self, new: str):
         if self._root is None:
@@ -92,9 +96,43 @@ class Radix:
             self._root = new_root
         elif new.startswith(self._root.word) :
             self._root = self._root.insert_child_or_sibling(new)
+        elif self._root_or_children_have_a_common_subprefix(self._root, new):
+            inserted = False
+            root_word = self._root.word
+            shared_prefix_for_root = os.path.commonprefix([new, root_word])
+            if shared_prefix_for_root != '' and shared_prefix_for_root != root_word:
+                root_contains_more_than_shared_prefix = len(root_word) > len(shared_prefix_for_root)
+                if root_contains_more_than_shared_prefix:
+                    new_without_prefix = new[len(shared_prefix_for_root):]
+                    intermediate_node = Node(shared_prefix_for_root, False)
+                    rest_of_root_word = root_word[len(shared_prefix_for_root):]
+                    node_rest_of_root_word = Node(rest_of_root_word, True, self._root.children)
+
+                    node_new = Node(new_without_prefix, True)
+                    if new_without_prefix < rest_of_root_word:
+                        intermediate_node.children.append(node_new)
+                        intermediate_node.children.append(node_rest_of_root_word)
+                    else:
+                        intermediate_node.children.append(node_rest_of_root_word)
+                        intermediate_node.children.append(node_new)
+                    inserted = True
+                    self._root = intermediate_node
+            if inserted:
+                return
         else:
             new_root = Node("", False)
             new_root.children.append(self._root)
             self._root = new_root
 
             self._root.children.append(Node(new, True))
+
+    @staticmethod
+    def _root_or_children_have_a_common_subprefix(_root, new) -> bool:
+        shared_prefix_for_root = os.path.commonprefix([new, _root.word])
+        if shared_prefix_for_root != '':
+            return True
+        for child in _root.children:
+            shared_prefix_for_child = os.path.commonprefix([new, child.word])
+            if shared_prefix_for_child != '':
+                return True
+        return False
