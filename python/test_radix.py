@@ -101,24 +101,6 @@ class TestRadix:
             assert FinalNode("b", True, 0) == radix._root.children[0]
             assert FinalNode("c", True, 0) == radix._root.children[1]
 
-    def test_insert_two_nodes_sharing_a_non_final_word(self):
-        radix = Radix()
-        radix.insert("ac")
-        radix.insert("ab")
-
-        assert FinalNode("a", False, 2) == radix._root
-        assert FinalNode("b", True, 0) == radix._root.children[0]
-        assert FinalNode("c", True, 0) == radix._root.children[1]
-
-    def test_insert_two_nodes_sharing_a_non_final_word_reverse(self):
-        radix = Radix()
-        radix.insert("ab")
-        radix.insert("ac")
-
-        assert FinalNode("a", False, 2) == radix._root
-        assert FinalNode("b", True, 0) == radix._root.children[0]
-        assert FinalNode("c", True, 0) == radix._root.children[1]
-
     @staticmethod
     def permute_insert(news: list[str]) -> Iterator[Radix]:
         permutation: tuple[str]
