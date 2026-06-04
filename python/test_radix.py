@@ -95,7 +95,7 @@ class TestRadix:
         assert FinalNode("b", True, 1) == radix._root.children[0]
         assert FinalNode('cd', True, 0) == radix._root.children[0].children[0]
 
-    def test_insert_two_nodes_sharing_a_non_final_word_with_permute_insert(self):
+    def test_insert_two_nodes_sharing_a_non_final_word(self):
         for radix in self.permute_insert(["ac", "ab"]):
             assert FinalNode("a", False, 2) == radix._root
             assert FinalNode("b", True, 0) == radix._root.children[0]
