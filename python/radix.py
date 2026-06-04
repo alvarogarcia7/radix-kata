@@ -28,6 +28,9 @@ class Node:
         return repr_for_parent + else_
 
     def insert(self, new: str):
+        self.insert_child_or_sibling(new)
+
+    def insert_child_or_sibling(self, new: str):
         if new.startswith(self.word):
             rest_of_word = new.split(self.word, 1)[1]
             inserted = False
@@ -37,7 +40,6 @@ class Node:
                     child.insert(rest_of_word)
                     inserted = True
             if not inserted:
-                print(f"case insert {new} - last append")
                 self.children.append(Node(rest_of_word, True))
         else:
             self.children.append(Node(new, True))
@@ -66,19 +68,7 @@ class Radix:
             return
 
         if new.startswith(self._root.word):
-            rest_of_word = new.split(self._root.word, 1)[1]
-            print(rest_of_word)
-
-            inserted = False
-            for child in self._root.children:
-                shared_prefix_with_child = os.path.commonprefix([rest_of_word, child.word])
-                if shared_prefix_with_child != '':
-                    child.insert(rest_of_word)
-                    inserted = True
-
-            if not inserted:
-                print(f"Case {rest_of_word} PASSING AFTER FOR")
-                self._root.children.append(Node(rest_of_word, True))
+            self._root.insert_child_or_sibling(new)
         else:
             new_root = Node("", False)
             new_root.children.append(self._root)
