@@ -1,4 +1,6 @@
+import itertools
 import pprint
+from typing import Any, Iterator
 
 from radix import Node, Radix, FinalNode
 
@@ -93,6 +95,12 @@ class TestRadix:
         assert FinalNode("b", True, 1) == radix._root.children[0]
         assert FinalNode('cd', True, 0) == radix._root.children[0].children[0]
 
+    def test_insert_two_nodes_sharing_a_non_final_word_with_permute_insert(self):
+        for radix in self.permute_insert(["ac", "ab"]):
+            assert FinalNode("a", False, 2) == radix._root
+            assert FinalNode("b", True, 0) == radix._root.children[0]
+            assert FinalNode("c", True, 0) == radix._root.children[1]
+
     def test_insert_two_nodes_sharing_a_non_final_word(self):
         radix = Radix()
         radix.insert("ac")
@@ -110,3 +118,12 @@ class TestRadix:
         assert FinalNode("a", False, 2) == radix._root
         assert FinalNode("b", True, 0) == radix._root.children[0]
         assert FinalNode("c", True, 0) == radix._root.children[1]
+
+    @staticmethod
+    def permute_insert(news: list[str]) -> Iterator[Radix]:
+        permutation: tuple[str]
+        for permutation in itertools.permutations(news):
+            radix = Radix()
+            for element in permutation:
+                radix.insert(element)
+            yield radix
