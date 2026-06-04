@@ -63,3 +63,11 @@ class TestRadix:
         assert FinalNode('c', True, 1) == radix._root.children[0].children[0]
         assert FinalNode('d', True, 0) == radix._root.children[0].children[0].children[0]
 
+    def test_insert_a_parent_node_that_matches_completely(self):
+        radix = Radix()
+        radix.insert("ab")
+        radix.insert("a")
+
+        assert FinalNode("a", True, 1) == radix._root
+        assert FinalNode('b', True, 0) == radix._root.children[0]
+

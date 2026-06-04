@@ -68,7 +68,13 @@ class Radix:
             self._root = Node(new, True)
             return
 
-        if new.startswith(self._root.word):
+        if self._root.word.startswith(new):
+            new_root = Node(new, True)
+            previous_root = self._root
+            previous_root.word = previous_root.word[len(new):]
+            new_root.children.append(previous_root)
+            self._root = new_root
+        elif new.startswith(self._root.word) :
             self._root.insert_child_or_sibling(new)
         else:
             new_root = Node("", False)
