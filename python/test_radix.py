@@ -45,9 +45,6 @@ class TestRadix:
         radix.insert("abc")
         radix.insert("ad")
 
-        import pprint
-        pprint.pprint(radix)
-
         assert FinalNode("a", True, 2) == radix._root
         assert FinalNode('bc', True, 0) == radix._root.children[0]
         assert FinalNode('d', True, 0) == radix._root.children[1]
