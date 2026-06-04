@@ -1,10 +1,11 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
         
 @dataclass
 class Node:
     word: str
-    children: [Node]
     is_final: bool
+    children: [Node] = field(default_factory=list)
+
 
 
