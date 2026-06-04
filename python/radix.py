@@ -1,13 +1,14 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
+import os
 
 
 @dataclass
 class Node:
     word: str
     is_final: bool
-    children: [Node] = field(default_factory=list)
+    children: list[Node] = field(default_factory=list)
 
     def __eq__(self, o: Any):
         return self.word == o.word and self.is_final == o.is_final
@@ -15,15 +16,20 @@ class Node:
     def __deep_eq__(self, o: Any):
         return self == o and self.children == o.children
 
-    def __repr__(self):
+    def __repr__(self, depth=0):
         is_f = "F" if self.is_final else " "
-        return f"[{is_f}] {self.word} {len(self.children)}\n" + "\n".join([c.__repr__() for c in self.children])
+        repr_for_parent = f"{'\t' * depth}[{is_f}] {self.word}"
+        if len(self.children) == 0:
+            return repr_for_parent
+        else:
+            repr_for_parent += "\n"
+        else_ = (f"{len(self.children)} children:\n" + "".join(
+            [c.__repr__(depth + 1) for c in self.children]) if self.children else "")
+        return repr_for_parent + else_
 
     def insert(self, new: str):
         if new.startswith(self.word):
             rest_of_word = new.split(self.word, 1)[1]
-            import os
-
             for child in self.children:
                 shared_prefix_for_child = os.path.commonprefix([rest_of_word, child.word])
                 if shared_prefix_for_child != '':
@@ -50,7 +56,7 @@ class Radix:
         self._root = None
 
     def __repr__(self):
-        return "\n".join([c.__repr__() for c in [[self._root] + self._root.children]])
+        return self._root.__repr__()
 
     def insert(self, new: str):
         if self._root is None:

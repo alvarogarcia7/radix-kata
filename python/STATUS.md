@@ -17,5 +17,5 @@ when it should be
 
 ## Implement pprint better
 
-- [ ] show the depth (as in my example above) when printing the tree
+- [x] show the depth (as in my example above) when printing the tree
 
