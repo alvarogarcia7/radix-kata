@@ -1,8 +1,9 @@
 import itertools
 import pprint
-from typing import Any, Iterator
+from typing import Iterator
 
 from radix import Node, Radix, FinalNode
+
 
 class TestRadix:
     def test_empty_node(self):
@@ -24,25 +25,26 @@ class TestRadix:
         assert FinalNode("a", True, 0) == radix._root
     
     def test_insert_children_nodes(self):
-        radix = Radix()
-        radix.insert("a")
-        radix.insert("abc")
+        for radix in self.permute_insert(["a", "abc"]):
+            assert FinalNode("a", True, 1) == radix._root
+            assert FinalNode('bc', True, 0) == radix._root.children[0]
 
-        assert FinalNode("a", True, 1) == radix._root
-        assert FinalNode('bc', True, 0) == radix._root.children[0]
-    
+    # def test_insert_sibling_nodes(self):
+    #     for radix in self.permute_insert(["a", "b"]):
+    #         pprint.pprint(radix)
+    #         assert FinalNode("", False, 2) == radix._root
+    #         assert FinalNode("a", True, 0) == radix._root.children[0]
+    #         assert FinalNode('b', True, 0) == radix._root.children[1]
+
     def test_insert_sibling_nodes(self):
         radix = Radix()
         radix.insert("a")
         radix.insert("b")
 
-        import pprint
-        pprint.pprint(radix)
-
         assert FinalNode("", False, 2) == radix._root
         assert FinalNode("a", True, 0) == radix._root.children[0]
         assert FinalNode('b', True, 0) == radix._root.children[1]
-    
+
     def test_insert_niece_nodes(self):
         radix = Radix()
         radix.insert("a")
@@ -67,22 +69,30 @@ class TestRadix:
         assert FinalNode('c', True, 1) == radix._root.children[0].children[0]
         assert FinalNode('d', True, 0) == radix._root.children[0].children[0].children[0]
 
-    def test_insert_a_parent_node_that_matches_completely(self):
-        radix = Radix()
-        radix.insert("abc")
-        radix.insert("a")
+    # def test_insert_niece_nodes(self):
+    #     for radix in self.permute_insert(["a", "ad", "abc"]):
+    #         pprint.pprint(radix)
+    #         assert FinalNode("a", True, 2) == radix._root
+    #         assert FinalNode('bc', True, 0) == radix._root.children[0]
+    #         assert FinalNode('d', True, 0) == radix._root.children[1]
+    #
+    # def test_insert_grandchildren_nodes(self):
+    #     for radix in self.permute_insert(["a", "ab", "abc", "abcd"]):
+    #         assert FinalNode("a", True, 1) == radix._root
+    #         assert FinalNode('b', True, 1) == radix._root.children[0]
+    #         assert FinalNode('c', True, 1) == radix._root.children[0].children[0]
+    #         assert FinalNode('d', True, 0) == radix._root.children[0].children[0].children[0]
 
-        assert FinalNode("a", True, 1) == radix._root
-        assert FinalNode('bc', True, 0) == radix._root.children[0]
+    def test_insert_a_parent_node_that_matches_completely(self):
+        for radix in self.permute_insert(["abc", "a"]):
+            assert FinalNode("a", True, 1) == radix._root
+            assert FinalNode('bc', True, 0) == radix._root.children[0]
 
 
     def test_insert_a_parent_node_that_matches_completely_with_multiple_letters(self):
-        radix = Radix()
-        radix.insert("abcd")
-        radix.insert("ab")
-
-        assert FinalNode("ab", True, 1) == radix._root
-        assert FinalNode('cd', True, 0) == radix._root.children[0]
+        for radix in self.permute_insert(["abcd", "ab"]):
+            assert FinalNode("ab", True, 1) == radix._root
+            assert FinalNode('cd', True, 0) == radix._root.children[0]
 
 
     def test_insert_a_child_node_that_matches_partially(self):

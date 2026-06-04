@@ -55,9 +55,11 @@ class Node:
                         inserted = True
             if not inserted:
                 self.children.append(Node(rest_of_word, True))
+                self.children.sort(key=lambda n: n.word)
             return self
         else:
             self.children.append(Node(new, True))
+            self.children.sort(key=lambda n: n.word)
             return self
 
 
