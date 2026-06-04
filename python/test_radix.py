@@ -8,9 +8,9 @@ class TestRadix:
         assert node.is_final
 
     def test_node_with_all_arguments(self):
-        node = Node("a", True, ['a'])
+        node = Node("a", True, [Node("a", True)])
         assert node.word == "a"
-        assert node.children == ['a']
+        assert node.children == [Node("a", True)]
         assert node.is_final
     
     def test_insert_only_word(self):
