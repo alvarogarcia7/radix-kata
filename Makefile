@@ -10,3 +10,7 @@ t: test
 test: test.c lib.h log/log.c log/log.h
 	gcc -g test.c log/log.c -o test -I log/ 
 
+clean:
+	rm -rf test test.dSYM
+.PHONY: clean
+
