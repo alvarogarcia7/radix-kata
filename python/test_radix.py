@@ -1,4 +1,4 @@
-from radix import Node, Radix
+from radix import Node, Radix, FinalNode
 
 class TestRadix:
     def test_empty_node(self):
@@ -18,3 +18,11 @@ class TestRadix:
         radix.insert("a")
 
         assert radix._root == Node("a", True)
+    
+    def test_insert_children_nodes(self):
+        radix = Radix()
+        radix.insert("a")
+        radix.insert("abc")
+
+        assert FinalNode("a") == radix._root
+        assert FinalNode('bc') == radix._root.children[0]
