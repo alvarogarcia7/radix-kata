@@ -34,3 +34,9 @@ class Radix:
             if new.startswith(self._root.word):
                 rest_of_word = new.split(self._root.word, 1)[1]
                 self._root.children.append(Node(rest_of_word, True))
+            else:
+                new_root = Node("", False)
+                new_root.children.append(self._root)
+                self._root = new_root
+
+                self._root.children.append(Node(new, True))
