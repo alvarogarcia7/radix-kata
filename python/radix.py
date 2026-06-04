@@ -25,13 +25,8 @@ class Node:
             import os
 
             for child in self.children:
-                children_words = []
-                children_words.append(rest_of_word)
-                children_words.append(child.word)
-                result = os.path.commonprefix(children_words)
-                if result != '':
-                    print(f"case insert {new} - result != []")
-                    # has a common prefix with one of the children
+                shared_prefix_for_child = os.path.commonprefix([rest_of_word, child.word])
+                if shared_prefix_for_child != '':
                     child.insert(rest_of_word)
                     return
             print(f"case insert {new} - last append")
@@ -68,13 +63,8 @@ class Radix:
             import os
 
             for child in self._root.children:
-                children_words = []
-                children_words.append(rest_of_word)
-                children_words.append(child.word)
-                result = os.path.commonprefix(children_words)
-                print(result)
-                if result != '':
-                    # has a common prefix with one of the children
+                shared_prefix_with_child = os.path.commonprefix([rest_of_word, child.word])
+                if shared_prefix_with_child != '':
                     child.insert(rest_of_word)
                     return
 
