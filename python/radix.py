@@ -8,4 +8,11 @@ class Node:
     children: [Node] = field(default_factory=list)
 
 
+class Radix:
+    _root: Node
 
+    def __init__(self):
+        self._root = Node("", False)
+
+    def insert(self, new: str):
+        self._root = Node(new, True)
